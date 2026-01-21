@@ -2,6 +2,7 @@
 import {
     SidebarGroup,
     SidebarGroupContent,
+    SidebarGroupLabel,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
@@ -21,6 +22,7 @@ defineProps<Props>();
     <SidebarGroup
         :class="`group-data-[collapsible=icon]:p-0 ${$props.class || ''}`"
     >
+        <SidebarGroupLabel>Platform</SidebarGroupLabel>
         <SidebarGroupContent>
             <SidebarMenu>
                 <SidebarMenuItem v-for="item in items" :key="item.title">

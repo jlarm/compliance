@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Enums\Role;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -40,6 +41,14 @@ final class User extends Authenticatable
         'two_factor_recovery_codes',
         'remember_token',
     ];
+
+    /**
+     * @return HasMany<Invitation, User>
+     */
+    public function invitations(): HasMany
+    {
+        return $this->hasMany(Invitation::class, 'invited_by');
+    }
 
     /**
      * Get the attributes that should be cast.
