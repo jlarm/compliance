@@ -28,6 +28,7 @@
         "nunomaduro/collision": "^8.6",
         "pestphp/pest": "^4.3",
         "pestphp/pest-plugin-laravel": "^4.0",
+        "pestphp/pest-plugin-type-coverage": "^4.0",
         "rector/rector": "^2.3"
     },
     "autoload": {
@@ -65,13 +66,19 @@
             "pint --parallel",
             "npm run lint"
         ],
+        "test:type-coverage": "pest --type-coverage --min=100",
         "test:lint": [
-            "pint --parallel --test"
+            "pint --parallel --test",
+            "rector --dry-run",
+            "npm run test:lint"
         ],
+        "test:unit": "pest --parallel --coverage --exactly=100.0",
+        "test:types": "phpstan",
         "test": [
-            "@php artisan config:clear --ansi",
+            "@test:type-coverage",
+            "@test:unit",
             "@test:lint",
-            "@php artisan test"
+            "@test:types"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
