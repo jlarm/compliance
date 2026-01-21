@@ -28,7 +28,7 @@ final class CreateNewUser implements CreatesNewUsers
             ...$this->profileRules(),
             'password' => $this->passwordRules(),
             'role' => ['required', Rule::enum(Role::class)],
-            'qualified_individual' => 'required|boolean',
+            'qualified_individual' => ['required', 'boolean'],
         ])->validate();
 
         return User::query()->create([
