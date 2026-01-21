@@ -6,8 +6,10 @@ namespace App\Actions\Fortify;
 
 use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
+use App\Enums\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 
 final class CreateNewUser implements CreatesNewUsers
@@ -25,12 +27,16 @@ final class CreateNewUser implements CreatesNewUsers
         Validator::make($input, [
             ...$this->profileRules(),
             'password' => $this->passwordRules(),
+            'role' => ['required', Rule::enum(Role::class)],
+            'qualified_individual' => ['required', 'boolean'],
         ])->validate();
 
         return User::query()->create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => $input['password'],
+            'role' => $input['role'],
+            'qualified_individual' => $input['qualified_individual'],
         ]);
     }
 }

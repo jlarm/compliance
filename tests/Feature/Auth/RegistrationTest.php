@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Enums\Role;
+
 test('registration screen can be rendered', function (): void {
     $response = $this->get(route('register'));
 
@@ -14,6 +16,8 @@ test('new users can register', function (): void {
         'email' => 'test@example.com',
         'password' => 'password',
         'password_confirmation' => 'password',
+        'role' => Role::EMPLOYEE->value,
+        'qualified_individual' => false,
     ]);
 
     $this->assertAuthenticated();
