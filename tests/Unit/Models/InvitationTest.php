@@ -36,7 +36,7 @@ test('is valid', function (): void {
 });
 
 test('has expired', function (): void {
-    $invitation = Invitation::factory()->create(['expires_at' => now()->subDay(10)]);
+    $invitation = Invitation::factory()->create(['expires_at' => now()->subDay()]);
 
     expect($invitation->hasExpired())->toBeTrue();
 });

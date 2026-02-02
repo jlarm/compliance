@@ -6,6 +6,8 @@ namespace App\Models;
 
 use App\Enums\Role;
 use Carbon\CarbonInterface;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -16,13 +18,13 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property-read int $id
  * @property-read string $name
  * @property-read string $email
- * @property-read string|null $email_verified_at
+ * @property string|null $email_verified_at
  * @property-read string $password
- * @property-read string $role
+ * @property-read Role $role
  * @property-read bool $qualified_individual
  * @property-read CarbonInterface $two_factor_confirmed_at
- * @property-read  CarbonInterface $created_at
- * @property-read  CarbonInterface $updated_at
+ * @property-read CarbonInterface $created_at
+ * @property-read CarbonInterface $updated_at
  */
 final class User extends Authenticatable
 {
@@ -43,7 +45,7 @@ final class User extends Authenticatable
     ];
 
     /**
-     * @return HasMany<Invitation, User>
+     * @return HasMany<Invitation, $this>
      */
     public function invitations(): HasMany
     {
@@ -69,5 +71,14 @@ final class User extends Authenticatable
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
+    }
+
+    #[Scope]
+    protected function centralUsers(Builder $query): Builder
+    {
+        return $query->where(function (Builder $query): void {
+            $query->where('role', Role::ADMIN)
+                ->orWhere('role', Role::CONSULTANT);
+        });
     }
 }

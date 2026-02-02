@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\Role;
+use App\Observers\InvitationObserver;
 use Carbon\CarbonInterface;
 use Database\Factories\InvitationFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,13 +17,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read int $id
  * @property-read string $email
  * @property-read Role $role
- * @property-read string $token
- * @property-read int $invited_by
- * @property-read CarbonInterface|null $expires_at
+ * @property string $token
+ * @property int $invited_by
+ * @property CarbonInterface|null $expires_at
  * @property-read CarbonInterface|null $accepted_at
  * @property-read CarbonInterface $created_at
  * @property-read CarbonInterface $updated_at
  */
+#[ObservedBy(InvitationObserver::class)]
 final class Invitation extends Model
 {
     /** @use HasFactory<InvitationFactory> */
@@ -38,7 +41,7 @@ final class Invitation extends Model
     }
 
     /**
-     * @return BelongsTo<Invitation, User>
+     * @return BelongsTo<User, $this>
      */
     public function invitedBy(): BelongsTo
     {
